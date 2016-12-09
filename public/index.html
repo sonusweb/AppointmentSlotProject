@@ -1,0 +1,62 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+    <link href="css/bootstrap.css" rel="stylesheet" />
+    <link href="css/style.css" rel="stylesheet" />
+   
+    <script src="scripts/jquery-1.9.1.js"></script>
+    <script src="scripts/angular.js"></script>
+    <script src="scripts/angular.min.js"></script>
+    <script src="scripts/angular-material.js"></script>
+    <script src="scripts/angular-animate.js"></script>
+    <script src="scripts/angular-ui-router.js"></script>
+    <script src="scripts/angular-modal-service.js"></script>
+    <script src="scripts/bootstrap.js"></script>
+    <script src="scripts/ngStorage.js"></script>
+
+    <!--Application Scripts-->
+    <!--<script src="app.js"></script>-->
+
+    <!--controllers-->
+    <script type="text/javascript"  src="controller/scheduleCtrl.js"></script>
+    <!--<script src="controller/schedulePopupModalCtrl.js"></script>-->
+
+</head>
+<body ng-app="scheduleApp">
+  
+    <div ng-controller="scheduleCtrl" style="align-content:center" class="container">
+        <h1>Welcome to appointment scheduler</h1>
+        <div class="row"  >
+            <div class="col-sm-1">&nbsp;</div>
+            <div class="col-sm-4">
+                <label>Enter Date:</label>
+                <input type="date" ng-bind="{{date}}" />
+            </div>
+                </div>
+        <div class="row">
+            <div class="col-sm-1">&nbsp;</div>
+                <div class="col-sm-4">
+                    Select available time slot
+                    <form>
+                        <table>
+
+                            <tr ng-repeat="appointment in appointments">
+                                <td>
+                                    <input type="text" name="name" ng-model="appointment.name" class="form-control" />
+                                    <input type="text" name="phone" ng-model="appointment.phone" class="form-control" />
+                                    <button ng-if="appointment.status == 'true'" type="button" class="btn .btn-default" style="background-color:red;width:100px" ng-click="openWindow(appointment.name,appointment.phone)">{{appointment.time}}</button>
+                                    <button ng-if="appointment.status == 'false'" type="button" class="btn .btn-default" style="background-color:green;width:100px" ng-click="openWindow(appointment.name,appointment.phone)">{{appointment.time}}</button>
+                                </td>
+                            </tr>
+
+                        </table>
+                    </form>
+                </div>
+             
+            </div>
+        
+    </div>
+</body>
+</html>
