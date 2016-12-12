@@ -7,6 +7,9 @@ scheduleApp.controller("appointmentCtrl", function ($scope, $element, $window, $
         ParentScope = $window.opener.ScopeToShare;
         $scope.name = ParentScope.name;
         $scope.phone = ParentScope.phone;
+        $scope.date = ParentScope.date;
+        $scope.time = ParentScope.time;
+        $scope.status = ParentScope.status;
     
 
     //  This close function doesn't need to use jQuery or bootstrap, because
@@ -34,40 +37,43 @@ scheduleApp.controller("appointmentCtrl", function ($scope, $element, $window, $
 
 
 
-    //$scope.save = function (name, phone) {
-    //    $window.ScopeToShare = $scope;
-    //    $window.opener.location.reload();
-    //};
 
-    $http.get('../appointment.json').success(function (data) {
-        $scope.appointments = data;
+    var data = {};
+    $http.get('http://localhost:8080/api/appointment', data).then(response=> {
+        $scope.appointments = response.data; 
     });
 
+  //To save appointment 
     $scope.addAppointment = function () {
-
-        $scope.bla = "sijs";
-        $scope.appointments.push({date: $scope.date,time: $scope.time,name: $scope.name,phone: $scope.phone,status: $scope.status
+      
+        angular.forEach($scope.appointments, function (name,phone) {
+            if ($scope.name == name && $scope.phone == phone) {
+                date = $scope.date;
+                time = $scope.time;
+                $scope.appointments.name = $scope.name;
+                $scope.appointments.phone = $scope.phone;
+                $scope.appointments.status = "true";
+            }
+            else {
+                $scope.appointment = [{
+                    date: $scope.date,
+                    time: $scope.time,
+                    name: $scope.name,
+                    phone: $scope.phone,
+                    status: "true"
+                }];
+                $scope.appointments = $scope.appointments.concat($scope.appointment);
+            }
+        });
+        $http.post('http://localhost:8080/api/appointment/add', $scope.appointments).then(response=> {
+            $scope.appointments = response.data;
         });
 
-
-        var dataObj = {
-            date: $scope.date,
-            time: $scope.time,
+        //  Now call close, returning control to the caller.
+        $window.close({
             name: $scope.name,
-            phone: $scope.phone,
-            status: $scope.status
-        };
-        var res = $http.post('../appointment.json', dataObj);
-        res.success(function (data, status, headers, config) {
-            $scope.message = data;
-        });
-        res.error(function (data, status, headers, config) {
-            alert("failure message: " + JSON.stringify({ data: data }));
-        });
-
-    }
-
-
-
+            phone: $scope.phone
+        }, 500); // close, but give 500ms for bootstrap to animate
+    };
 
 });

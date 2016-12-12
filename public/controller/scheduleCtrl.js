@@ -1,34 +1,33 @@
 var scheduleApp = angular.module("scheduleApp", []);
 scheduleApp.controller("scheduleCtrl",['$scope', '$http',  '$window',
             function ($scope, $http,  $window) {
-                    $scope.date = new Date();
-                    $scope.appointments = [];
-                    $scope.name = '';
-                    $scope.phone = '';
-                    $http.get('appointment.json').success(function (data) {
-                        $scope.appointments = data;
+                $scope.date = new Date();
+                $scope.appointments = [];
+                $scope.name = '';
+                $scope.phone = '';
+                $scope.slots = [];
+                //Used for json test
+                //$http.get('appointment.json').success(function (data) {
+                //    $scope.appointments = data;
+                //});
+
+                var data = {};
+                $http.get('http://localhost:8080/api/appointment',data).then(response=> {
+                        $scope.appointments=response.data;
+                       
                     });
 
-                    $scope.openWindow = function (name,phone) {
+                    $scope.openWindow = function (name,phone,date,time,status) {
                         $scope.name = name;
                         $scope.phone = phone;
+                        $scope.date = date;
+                        $scope.time = time;
+                        $scope.status = status;
                         $window.ScopeToShare = $scope;
                         $window.open('../view/addAppointment.html', "width=400,height=400");
                     };
 
                
-        //$uibModal.open({
-        //    animation: $scope.animationsEnabled,
-        //    templateUrl: '/view/schedulePopup.html',
-        //    controller: 'schedulePopupModal',
-        //    backdrop: false,
-        //    keyboard: false,
-        //    size: 'lg',
-        //    resolve: {
-        //        //patientID: function () {
-        //        //    return patientID;
-        //        //}
-        //    }
-        //});
+      
       
 }]);
